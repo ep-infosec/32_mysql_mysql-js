@@ -1,0 +1,54 @@
+/* DBTransactionHandler represents a database transaction.
+*/
+
+var DBTransactionHandler; // Standard members of DBTransactionHandler object
+
+
+DBTransactionHandler = { 
+  dbSession          : null,  // DBSession for this transaction
+  error              : null,  // DBOperationError applying to the transaction
+  executedOperations : null,  // Array of DBOperations already executed
+};
+
+
+/* setPartitionKey(TableHandler Table, Array partitionKey)
+  IMMEDIATE
+  
+  When a database is partitioned in some way, setPartitionKey() gives the
+  application an opportunity to indicate which partition to use for
+  a particular transaction.
+*/
+  function setPartitionKey(tableHandler, partitionKey) {}
+
+
+/* execute(DBOperation[] dbOperationList,
+           function(error, DBTransactionHandler) callback)
+   ASYNC
+   
+   Executes the DBOperations in dbOperationList.
+   Commits the transaction if autocommit is true.
+*/
+  function execute(dbOperationList, callback) {}
+
+
+/* commit(function(error, DBTransactionHandler) callback)
+   ASYNC 
+   
+   Commit work.
+*/
+  function commit(callback) {}
+
+
+/* rollback(function(error, DBTransactionHandler) callback)
+   ASYNC 
+   
+   Roll back all previously executed operations.
+*/
+  function rollback(callback) {}
+
+
+
+/* This documentation file is a valid JavaScript module and exports: 
+*/
+exports.DBTransactionHandler =  DBTransactionHandler;
+

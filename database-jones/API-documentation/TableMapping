@@ -1,0 +1,218 @@
+
+/** @class FieldMapping 
+ *  A FieldMapping describes a single field in a domain object.
+ *  There is no public constructor for a FieldMapping.
+ *  A FieldMapping can be created using TableMapping.mapField(), or
+ *  FieldMapping literals can be used directly in the TableMapping constructor.
+ *  
+ */
+FieldMapping = {
+  fieldName     :  "" ,    /** Name of the field in the domain object 
+                               @type String */
+  columnName    :  "" ,    /** Column name where this field is stored  
+                               @type String */
+  persistent    : true,    /** Whether this field should be stored in database.
+                               @type Boolean @default true */
+  converter     : null,    /** Converter object to use with this field  
+                               @type Converter @default null */
+  sparseFieldNames: null,  /** sparse field names to store in this column 
+                               @type array @default null */
+  meta         : undefined /** meta for forward table definition
+                               @see Meta for usage
+                               @type Meta @default undefined */
+};
+
+
+
+/** TableMapping constructor 
+ *
+ *  There are two forms of the TableMapping constructor.
+ *  1:  TableMapping(tableName) : Create a new TableMapping for table tableName.
+ *      tableName can be in dotted "database.table" form.
+ *
+ *  2:  TableMapping(tableMappingLiteral) : Create a new TableMapping from 
+ *      an existing object or object literal. 
+ *
+ * @class TableMapping
+ * @constructor
+ * @param {String} [tableName] 
+ * @param {TableMapping} [tableMappingLiteral]
+ */
+function TableMapping(tableName_or_tableMapping) {};
+
+
+
+/*****                      TableMapping methods 
+                            --------------------                      *****/
+  
+/* @method mapField
+   mapField(fieldName, [columnName], [converter], [meta], [persistent])
+   IMMEDIATE
+   
+   Create a fieldMapping for a named field of a mapped object. 
+  
+   @param fieldName {String}
+   The fieldName parameter is mandatory.  It denotes a field in a JavaScript
+   application object.
+
+   The other parameters are optional, and may appear in any order.  
+
+   @param columnName {String}
+   columnName specifies the name of the database column that maps to this object
+   field.  If omitted, it defaults to a column with the same name as the field.
+
+   @param converter {Converter}
+   converter can be used to supply an object to perform custom conversions
+   between JavaScript values and database values.  It defaults to null.  If 
+   supplied, it must conform to the description of a Converter.
+
+   @para meta {Meta}
+   Meta used for forward mapping of a database column from the field.
+
+   @param persistent {Boolean=true}
+   Persistent specifies whether the field will be persisted to the database.
+   It defaults to true.  If persistent is given as false, then the columnName 
+   and converter parameters may not be supplied.  
+   
+    @return {TableMapping} @chainable
+    mapField() returns the current TableMapping object, so that method
+    invocations can be chained.
+*/
+  function mapField(fieldName, columnName, converter, persistent) {};
+
+/* @method mapOneToOne(Object mapping)
+   IMMEDIATE
+
+   Create a mapping for a named one to one relationship of a mapped object.
+   There must exist a foreign key in the underlying table that associates the
+     columns mapped to the fields of the relationship.
+   @param mapping is a literal with properties:
+     fieldName required; the field name in this object
+     columnName optional; if omitted, use fieldName
+     target required; the name of the target (constructor) function
+     targetField required; the field name in the target
+     foreignKey optional; the name of the foreign key; one side of the relationship
+       must define the foreign key in the underlying table
+
+    @return {TableMapping} @chainable
+    mapOneToOne() returns the current TableMapping object, so that method
+    invocations can be chained.
+*/
+  function mapOneToOne(Object mapping) {};
+
+/* @method mapOneToMany(Object mapping)
+   IMMEDIATE
+
+   Create a mapping for a named one to many relationship of a mapped object.
+   There must exist a foreign key in the underlying table that associates the
+     columns mapped to the fields of the relationship.
+   @param mapping is a literal with properties:
+     fieldName required; the field name in this object
+     columnName optional; if omitted, use fieldName
+     target required; the name of the target (constructor) function
+     targetField required; the field name in the target
+     foreignKey optional; the name of the foreign key; one side of the relationship
+       must define the foreign key in the underlying table
+
+    @return {TableMapping} @chainable
+    mapOneToMany() returns the current TableMapping object, so that method
+    invocations can be chained.
+*/
+  function mapOneToMany(Object mapping) {};
+
+/* @method mapManyToOne(Object mapping)
+   IMMEDIATE
+
+   Create a mapping for a named many to one relationship of a mapped object.
+   There must exist a foreign key in the underlying table that associates the
+     columns mapped to the fields of the relationship.
+   @param mapping is a literal with properties:
+     fieldName required; the field name in this object
+     columnName optional; if omitted, use fieldName
+     target required; the name of the target (constructor) function
+     targetField required; the field name in the target
+     foreignKey optional; the name of the foreign key; one side of the relationship
+       must define the foreign key in the underlying table
+
+    @return {TableMapping} @chainable
+    mapManyToOne() returns the current TableMapping object, so that method
+    invocations can be chained.
+*/
+  function mapManyToOne(Object mapping) {};
+
+/* @method mapManyToMany(Object mapping)
+   IMMEDIATE
+
+   Create a mapping for a named many to many relationship of a mapped object.
+   There must exist a foreign key in the underlying table to the join table
+     that associates the columns mapped to the fields of the relationship.
+   @param mapping is a literal with properties:
+     fieldName required; the field name in this object
+     columnName optional; if omitted, use fieldName
+     target required; the name of the target (constructor) function
+     targetField required; the field name in the target
+     foreignKey optional; the name of the foreign key; one side of the relationship
+       must define the foreign key in the underlying table
+     joinTable optional; the name of the join table associating the two mapped tables;
+       one side of the relationship must define the join table
+
+    @return {TableMapping} @chainable
+    mapManyToMany() returns the current TableMapping object, so that method
+    invocations can be chained.
+*/
+  function mapManyToMany(Object mapping) {};
+
+/* @method mapSparseFields(columnName, converter)
+   IMMEDIATE
+
+   Map a column used to store multiple fields that are not mapped to their own columns.
+   @param columnName required; the name of the column in the table
+   @param converter optional; the default is a built-in JSON serializer
+
+    @return {TableMapping} @chainable
+    mapSparseFields() returns the current TableMapping object, so that method
+    invocations can be chained.
+*/
+  mapSparseFields(columnName, properties...)
+
+/* @method applyToClass
+   applyToClass(constructor)
+   IMMEDIATE 
+
+   Attach a TableMapping to the constructor for mapped objects.
+
+   After this is done, any object created from the constructor will qualify
+   as a "mapped instance."  With mapped instances, several idiomatic forms 
+   of the Session and Batch methods can be used.  For example, an application
+   can construct a partially filled-in instance, and then use Session.load() to 
+   populate it with all mapped fields from the database.  After the application
+   modifies the instance, Session.save() will save it back.   
+
+   Similarly, Session.find() can take the mapped constructor, retrieve an object
+   based on keys, and then use the constructor to create a fully-fledged domain
+   object.
+
+   Also, the class can be used in Projections to select a subset of columns to
+   retrieve when finding objects in the database.
+
+   @param constructor {Function} Constructor of mapped class
+   @return constructor
+*/
+  function applyToClass(constructor) {};
+
+/* @method registerColumnConverter
+   registerColumnConverter(name, converter)
+   IMMEDIATE
+
+   Register a Converter for a named column.
+   Converters registered by column name in TableMapping take precedence over
+   those registered by column type on SessionFactory.  If both sorts of
+   converters are declared for a column, only the one registered by column
+   name will be used.
+*/
+  function registerColumnConverter(columnName, converter);
+  
+
+/* This file is a JavaScript module */
+exports.FieldMapping = FieldMapping;
+exports.TableMapping = TableMapping;

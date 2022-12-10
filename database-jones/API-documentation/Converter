@@ -1,0 +1,58 @@
+/*   
+   Converters convert values between JavaScript types and database types.
+
+   Converters can be defined for particular fields in a TableMapping,
+   and can also be defined on the SessionFactory for all columns of a
+   particular type.
+
+   When a Converter is defined for a column, the converter's toDB() method is
+   called before writing a value to the database, and the converter's fromDB()
+   method is called after reading a value from the database.
+
+   A Converter's fromDB() method receives a value of the JavaScript intermediate
+   type for the type stored in the database.  Intermediate types should be
+   JavaScript types that are able to store and retrieve values from a column
+   without losing any data.
+
+   Intermediate types are not standardized by Jones, but are defined by each
+   DBServiceProvider.  Intermediate types for many database types are
+   self-evident, such as JavaScript String for SQL VARCHAR and Node Buffer for
+   SQL BINARY.
+
+   Intermediate types for some other cases, such as 64-bit integer columns and
+   some SQL temporal types, are less obvious.  Some 64-bit integer values are
+   too big for JavaScript numbers, and some databases support time and date
+   fields with range and precision that differ from standard JavaScript date.
+
+   JavaScript Date supports millisecond precision, while MySQL can store
+   times with microsecond precision. The jones-ndb DBServiceProvider uses a
+   JavaScript class called MySQLTime as the intermediate type for DATE, TIME,
+   and DATETIME columns, and defines type converters that translate between
+   MySQLTime and JavaScript Date.  An application that required high precision
+   time handling could use MySQLTime directly.
+
+   Applications might also use converters to handle large numeric types with
+   values that cannot be represented by a JavaScript Number.
+
+   A converter object implements two functions: 
+      toDB(obj)  : convert obj, an application object, 
+                   into the intermediate type representation of a column
+      fromDB(val): convert val, an intermediate type,
+                   into an application object form
+   Each function explicitly returns the result of the conversion.   
+   
+   A TypeConverter registered by the user takes precedence over the adapter's 
+   default converter for a type (if any).
+*/
+
+
+function GenderConverter() {}:
+
+// Convert database 1 into 'M'; 2 into 'F'
+GenderConverter.prototype = {
+  "toDB"    : function(obj) { return (obj === 'M') ? 1 : 2;  },
+  "fromDB"  : function(val) { return (val === 1) ? 'M' : 'F';}
+};
+
+// register this object with the TableMapping or SessionFactory
+var converter = new GenderConverter(); 
